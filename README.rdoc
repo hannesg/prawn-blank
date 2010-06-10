@@ -1,0 +1,11 @@
+== RSpec
+
+prawn-blank aims to give prawn the ability to create pdf forms.
+
+== Install
+
+  gem install prawn-blank
+
+== Synopsis
+
+
