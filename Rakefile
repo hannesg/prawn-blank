@@ -8,7 +8,7 @@ require 'spec/ruby'
 
 task :default => [:package] 
 
-spec = Gem::Specification.load "validates.gemspec"
+spec = Gem::Specification.load "prawn-blank.gemspec"
 Rake::GemPackageTask.new(spec) do |pkg|
   pkg.need_zip = true
   pkg.need_tar = true
