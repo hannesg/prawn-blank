@@ -1,22 +1,20 @@
-class Prawn::Blank::TextField < Prawn::Blank::Field
-  
+class Prawn::Blank::Checkbox < Prawn::Blank::Field
   
   
   protected 
     def get_dict
       base = super
-      base[:BS][:S]=:U
-      base[:FT]=:Tx
+      base[:FT]=:Ch
       
       return base
     end
     
     def default_options
-      super().merge({:height=>16})
+      super.merge({:height=>10,:width=>10})
     end
   
     def self.get_possible_options
-      super() + [:font,:font_size]
+      super
     end
   public
   attr_accessor *get_possible_options

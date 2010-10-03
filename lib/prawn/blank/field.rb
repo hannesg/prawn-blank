@@ -18,12 +18,12 @@ class Prawn::Blank::Field
     @document=document
     options = (args.last.kind_of?(Hash) ? args.pop : {})
     Prawn.verify_options self.class.get_possible_options, options
-    puts self.methods.sort.inspect
+    #puts self.methods.sort.inspect
     options = default_options.merge(options)
     options.each do |k,v|
       self.send "#{k.to_s}=".to_sym,v
     end
-    puts options.inspect
+    #puts options.inspect
     #@options=options
   end
   

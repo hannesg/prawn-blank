@@ -5,9 +5,36 @@ module Prawn
     autoload :Field,"prawn/blank/field"
     autoload :Appearance,"prawn/blank/appearance"
     autoload :TextField,"prawn/blank/text_field"
+    autoload :Checkbox,"prawn/blank/checkbox"
+    autoload :Select,"prawn/blank/select"
+    autoload :Combo,"prawn/blank/combo"
     
     def text_field(options={})
       f=TextField.new(self,options)
+      if block_given?
+        yield(f)
+      end
+      add_field(f)
+    end
+    
+    def select(options={})
+      f=Select.new(self,options)
+      if block_given?
+        yield(f)
+      end
+      add_field(f)
+    end
+    
+    def combo(options={})
+      f=Combo.new(self,options)
+      if block_given?
+        yield(f)
+      end
+      add_field(f)
+    end
+    
+    def checkbox(options={})
+      f=Checkbox.new(self,options)
       if block_given?
         yield(f)
       end

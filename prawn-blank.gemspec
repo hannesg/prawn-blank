@@ -2,7 +2,7 @@ Gem::Specification.new do |s|
   s.name = "prawn-blank"
   s.version = "0.0.1"
   s.date = %q{2010-06-02}
-  s.authors = ["HanneG"]
+  s.authors = ["HannesG"]
   s.email = %q{hannes.georg@googlemail.com}
   s.summary = %q{prawn-blank adds forms to prawn}
 
