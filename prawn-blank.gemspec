@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.description = %q{prawn-blank adds forms to prawn}
   s.files = Dir.glob("{lib}/**/**/*") + ["Rakefile"]
   s.require_path = "lib"
-  s.add_dependency "prawn", ">= 0.84"
+  s.add_dependency "prawn", ">= 0.8.4"
   s.add_development_dependency('rspec')
   s.has_rdoc = true
 end
