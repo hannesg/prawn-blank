@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Prawn::Blank::Form < Hash
   def initialize()
     super()

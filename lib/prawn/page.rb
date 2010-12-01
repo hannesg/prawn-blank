@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Prawn::Core::Page
   
   def appearance_stream(appearance)

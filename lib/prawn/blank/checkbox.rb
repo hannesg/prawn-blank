@@ -1,10 +1,11 @@
+# -*- encoding : utf-8 -*-
 class Prawn::Blank::Checkbox < Prawn::Blank::Field
   
   
   protected 
     def get_dict
       base = super
-      base[:FT]=:Ch
+      base[:FT]=:Btn
       
       return base
     end

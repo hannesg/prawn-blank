@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Prawn::Blank::TextField < Prawn::Blank::Field
   
   
