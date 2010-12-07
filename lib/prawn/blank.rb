@@ -12,9 +12,14 @@ module Prawn
     autoload :Combo,"prawn/blank/combo"
     autoload :RadioGroup, "prawn/blank/radio_group"
     autoload :Radio, "prawn/blank/radio"
+    autoload :TextStyle,"prawn/blank/text_style"
     
     def text_field(options={})
-      f=TextField.new(self,options)
+      if options[:at]
+        options[:at] = self.send(:map_to_absolute,options[:at])
+      end
+      #puts self.bounds.inspect
+      f=TextField.create(self,options)
       if block_given?
         yield(f)
       end
@@ -22,15 +27,10 @@ module Prawn
     end
     
     def select(options={})
-      f=Select.new(self,options)
-      if block_given?
-        yield(f)
+      if options[:at]
+        options[:at] = self.send(:map_to_absolute,options[:at])
       end
-      add_field(f)
-    end
-    
-    def combo(options={})
-      f=Combo.new(self,options)
+      f=Select.create(self,options)
       if block_given?
         yield(f)
       end
@@ -38,7 +38,10 @@ module Prawn
     end
     
     def checkbox(options={})
-      f=Checkbox.new(self,options)
+      if options[:at]
+        options[:at] = self.send(:map_to_absolute,options[:at])
+      end
+      f=Checkbox.create(self,options)
       if block_given?
         yield(f)
       end
@@ -46,7 +49,7 @@ module Prawn
     end
     
     def radiogroup(options={})
-      f=RadioGroup.new(self,options)
+      f=RadioGroup.create(self,options)
       if block_given?
         yield(f)
       end
@@ -54,49 +57,59 @@ module Prawn
     end
     
     def radio(options={})
-      f=Radio.new(self,options)
+      if options[:at]
+        options[:at] = self.send(:map_to_absolute,options[:at])
+      end
+      f=Radio.create(self,options)
       if block_given?
         yield(f)
       end
       return add_field(f)
     end
     
-    def get_field_rect(at,width,height)
-      unless at.nil?
-        x,y=map_to_absolute(at)
-      else
-        x,y=image_position(width,height,{})
-        move_text_position height
-      end
-      return [x,y,x+width,y+height]
-    end
-    
-    #protected
-    def add_field(field)
-      hsh = field.to_h
-      annotation = ref!(hsh)
-      if hsh.key? :Kids
-        hsh[:Kids].each do |kid|
-          if kid.kind_of? Prawn::Reference
-            kid.data[:Parent] = annotation
-          end
-        end
-      end
-      acroform.add_field(annotation)
-      page.dictionary.data[:Annots] ||= []
-      page.dictionary.data[:Annots] << annotation
-      return annotation
-    end
-   
     def acroform
       state.store.root.data[:AcroForm] ||= ref!(Form.new)
       state.store.root.data[:AcroForm].data
     end
     
+    attr_accessor :default_appearance
     
-   
+    def default_appearance
+      @default_appearance ||= Appearance.new(self)
+    end
+    
+protected
+    def add_field(field)
+      field.finalize(self)
+      field.page = page.dictionary
+      acroform.add_field(field) if field.root?
+      page.dictionary.data[:Annots] ||= []
+      page.dictionary.data[:Annots] << field
+      return field
+    end
   end
+  
+  def TextStyle(*args)
+    
+    Prawn::Blank::TextStyle.new(*args)
+    
+  end
+  
+  def BorderStyle(doc,width,style=:S)
+    {
+      :W => width,
+      :Type => :Border,
+      :S => style
+    }
+  end
+  
+  def ColorStyle(doc,fill,stroke)
+    {
+      :BC => doc.send(:normalize_color,stroke),
+      :BG => doc.send(:normalize_color,fill)
+    }
+  end
+  
 end
 require 'prawn/document'
 Prawn::Document.extensions << Prawn::Blank
-require 'prawn/page'

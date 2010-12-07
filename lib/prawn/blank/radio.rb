@@ -2,24 +2,32 @@
 module Prawn::Blank
   class Radio < Field
     
-    protected 
-    def get_dict
-      base = super
-      base[:FT]=:Btn
-      base[:Ff] |= 32768
-      if @parent
-        base[:Parent] = @parent
-      end
-      puts base.inspect
-      return base
+    def value=(v)
+      @value = v
     end
     
-    def default_options
-      super.merge({:height=>10,:width=>10})
+    def value
+      @value
     end
-  
-    public
-    attr_accessor *get_possible_options
+    
+    def finalize(document)
+    # render this field
+      
+      app = self.appearance || document.default_appearance
+    
+      @data[:AP] = {:N =>{:Off=>app.radio_off(self), @value=>app.radio_on(self)},
+                    :R =>{:Off=>app.radio_off_over(self),@value=>app.radio_on_over(self)},
+                    :D =>{:Off=>app.radio_off_down(self),@value=>app.radio_on_down(self)}}
+      @data[:AS] = (self.parent.value == @value) ? @value : :Off
+      @data[:V] = @value
+    return
+  end
+    
+    protected
+    def default_options
+      super.merge({:FT => :Btn, :Ff => 32768})
+    end
+
     
   end
 end

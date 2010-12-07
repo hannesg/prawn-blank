@@ -2,38 +2,16 @@
 module Prawn::Blank
   class RadioGroup < Field
     
-    attr_accessor :children
-    
-    def radio(*args)
-      @children ||= []
-      rd = @document.radio(*args)
-      @children << rd
-      @opt ||= []
-      @opt << rd.data[:T]
+    def finalize(document)
+      #@data[:DA] = "/F1.0 9 Tf 0.000 1.000 0.000 rg"
+      #@data[:V] = :Off
+      @data.delete :Rect
     end
     
-    protected 
-    def get_dict
-      base = super
-      base[:FT]=:Btn
-      puts base.inspect
-      base[:Ff] |= 32768
-      if children
-        base[:Kids] = children
-        #base[:Opt] = @opt
-      end
-      base.delete :Rect
-      return base
-    end
-    
+    protected
     def default_options
-      super.merge({:height=>10,:width=>10})
+      super.merge({:FT => :Btn, :Ff => 32768})
     end
-  
-    def self.get_possible_options
-      super
-    end
-  public
-  attr_accessor *get_possible_options
+    
   end
 end

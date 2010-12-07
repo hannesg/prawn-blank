@@ -3,69 +3,69 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require "rubygems"
 gem "prawn"
 require "prawn"
-require File.join(File.dirname(__FILE__),"../lib/prawn/blank")
+require "prawn/blank"
 
 Prawn.debug = true
 
-Prawn::Document.generate "text_field.pdf" do |pdf|
+Prawn::Document.generate("prawn-blank-example.pdf",:page_size=>'A4') do |pdf|
   
-  checkbox_on_str = "q 1 w 0 g 0 G 0 0 m 10 10 l s 10 0 m 0 10 l s Q"
-  checkbox_on = pdf.ref!({:Type => :XObject,
-                        :Subtype => :Form,
-                        :Ressources => {:ProcSet => [:PDF]},
-                        :BBox => [0, 0,10,10],:Length => checkbox_on_str.length})
-  checkbox_on << checkbox_on_str
+  hlv = pdf.find_font("Helvetica")
   
-  checkbox_off_str = "q Q"
-  checkbox_off = pdf.ref!({:Type => :XObject,
-                        :Subtype => :Form,
-                        :Ressources => {:ProcSet => [:PDF]},
-                        :BBox => [0, 0,10,10],:Length => checkbox_off_str.length})
-  checkbox_off << checkbox_off_str
+  #pdf.font "argel.ttf"
+  pdf.text "Welcome to the first small form example!", :size => 18
+  
+  page_top = pdf.bounds.top
+  page_left = pdf.bounds.left
   
   
-  app = {
-      :font=>pdf.find_font("Helvetica"),
-      :font_size=>6,
-      :checkbox => {:on => checkbox_on, :off => checkbox_off}
-    }
-  
+  pdf.draw_text "First a textbox:", :at=>[page_left,page_top-50]
   
   pdf.text_field(
-    :name=>"name",
-    :at=>[10,10],
-    :width=>100,
-    :value=>"Hallooo!",
-    :multiline=>true,
-    :appearance=>app
+    :at => [page_left+ 200,page_top-55],
+    :name=>"text",
+    :value=>"Try edit me!"
     )
-    
-  pdf.select(
-    :name=>"select",
-    :at=>[10,100],
-    :width=>100,
-    :value=>"Duuuuuuu",
-    :appearance=>app,
-    :options=>["Duuuuuuu","Icchhhhh"]
-    )
-    
-  pdf.combo(
-    :name=>"combo",
-    :at=>[200,100],
-    :width=>100,
-    :value=>"Duuuuuuu",
-    :appearance=>app,
-    :options=>["Duuuuuuu","Icchhhhh"]
-    )
-    
-  pdf.checkbox(
-    :name=>'checkbox',
-    :at=>[10,200],
-    :width=>20,
-    :height=>20,
-    :value=>:Yes#,
-    #:appearance=>app
-  )
   
+  pdf.draw_text "Now a select:", :at=>[page_left,page_top-75]
+  
+  pdf.select(
+    :name=>'select',
+    :at => [page_left+ 200,page_top-80],
+    :value=>"select me!",
+    :editable=>true,
+    :options=>['not him!','select me!','no, me!','You can even edit this field ;)']
+    )
+  
+  pdf.draw_text "Now a checkbox:", :at=>[page_left,page_top-100]
+
+  pdf.checkbox(
+    :name => 'checkbox',
+    :at => [page_left+ 200,page_top-105],
+    :checked => true
+  )
+
+  pdf.draw_text "and a radio:", :at=>[page_left,page_top-125]
+  
+  pdf.draw_text "this", :at=>[page_left+215,page_top-130]
+  
+  pdf.draw_text "no that", :at=>[page_left+265,page_top-130]
+  
+  pdf.radiogroup(:name => 'radio', :value=>:That) do |rg|
+    
+    pdf.radio(
+      :parent => rg,
+      :at=>[page_left+200,page_top-130],
+      :value => :This
+    )
+    
+    pdf.radio(
+      :parent => rg,
+      :at => [page_left+250,page_top-130],
+      :value => :That
+    )
+    
+  end
+  
+  pdf.draw_text "Well that's it for now!", :at=>[page_left,page_top-150]
   
 end

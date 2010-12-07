@@ -10,7 +10,7 @@ class Prawn::Blank::Field < Prawn::Blank::FieldBase
         
         app.font.instance_eval do 
           @references[0] ||= register(0)
-          @document.acroform.add_ressource(:Font,identifier_for(0),@references[0])
+          @document.acroform.add_resource(:Font,identifier_for(0),@references[0])
         end
         
         base.merge! app.apply_to(self)

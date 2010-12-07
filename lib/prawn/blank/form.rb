@@ -6,16 +6,20 @@ class Prawn::Blank::Form < Hash
     self[:Fields] = []
   end
   
-  def add_ressource(type,name,dict)
+  def add_resource(type,name,dict)
     self[:DR][type] ||={}
     self[:DR][type][name] ||= dict
   end
   
-  def add_ressources(hash)
-    puts hash.inspect
+  def add_resources(hash)
     hash.each do |type, names|
-      names.each do |name,dict|
-        add_ressource(type, name, dict)
+      if names.kind_of? Array
+        self[:DR][type] ||= []
+        self[:DR][type] = self[:DR][type] | names
+      else
+        names.each do |name,dict|
+          add_resource(type, name, dict)
+        end
       end
     end
   end
