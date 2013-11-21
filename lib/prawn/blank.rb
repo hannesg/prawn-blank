@@ -1,4 +1,5 @@
 # -*- encoding : utf-8 -*-
+require 'prawn'
 module Prawn
   module Blank
     autoload :Form,"prawn/blank/form"
